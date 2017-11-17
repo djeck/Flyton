@@ -67,3 +67,12 @@ void initSortie(int port, int bit){
 //        P2IES |= bit;                       //Detection sur front montant
 //    }// est ce que je mets enable_interrupt?
 //}
+
+void delay(unsigned int ms)
+{
+	volatile unsigned int i=ms, z;
+	while (i--) {
+		z=100;
+		while(z--);
+	}
+}

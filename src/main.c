@@ -11,9 +11,9 @@ int main(void)
 		initEntree(1,BIT3);
 		initSortie(1,BIT0);
 	while(1){
-		if((P1IN & BIT3) == BIT3){
+			delay(1000);
 			P1OUT ^= BIT0;
-		}
+
 	}
 	return 0;
 }
