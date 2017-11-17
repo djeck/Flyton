@@ -17,11 +17,6 @@ void initGPIOPort2(int bit){
     P2SEL2 &= ~(bit);                       //force a 0
 }
 
-/*
- * initEntree : configurer un bit dans port1 ou port2 a une entree
- * exemple :
- *      initEntree(1,BIT2); // initialise P1.2 a une entree
- */
 void initEntree(int port, int bit){
     if(port ==1){
         initGPIOPort1(bit);                	//configurer a GPIO
@@ -36,11 +31,6 @@ void initEntree(int port, int bit){
     }
 }
 
-/*
- * initSortie : configurer un bit dans port1 ou port2 a une sortie
- * exemple :
- *      initSortie(2,BIT2); // initialise P2.2 a une sortie
- */
 void initSortie(int port, int bit){
     if(port == 1){
         initGPIOPort1(bit);                	//configurer a GPIO
