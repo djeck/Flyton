@@ -2,11 +2,13 @@
  * chassis.c
  *
  *  Created on: 17 nov. 2017
- *      Author: a.detrez.14
+ *      Author: a.detrez.14 and Wen
  */
 #include <msp430.h>
 #include "chassis.h"
 #include "utils.h"
+#include "PID.h"
+
 
 volatile unsigned long int cmpt_a = 0;
 volatile unsigned long int cmpt_b = 0;
@@ -21,17 +23,6 @@ __interrupt void PORT2_ISR(void)
 		cmpt_b++;
 	}
 	P2IFG = 0;
-}
-
-void initPID()//interruption toute 100 ms
-{
-	// 100 ms timer
-	TA0CTL = 0 | (TASSEL_2 | ID_3); // 8 divider
-	//TA0CTL |= MC_1; // up
-	TA0CTL |= MC_0; // stop
-	TA0CTL |= TAIE;
-	TA0CCR0 = 12500;
-	__enable_interrupt();
 }
 
 void initPWM()
@@ -75,6 +66,11 @@ void initOptoCoupleur()
 	_enable_interrupt();
 }
 
+/*
+ * initChassis : public
+ * Initialise les roues moteurs, les opto coupleur,
+ * et timer pour regulation PID
+ */
 void initChassis()
 {
 	initMoteurs();
@@ -82,9 +78,12 @@ void initChassis()
 	initPID();
 }
 
+/*
+ * avancer : avancer le robot avec une vitesse a une certaine distance
+ * <!!>pour instant pareil que avancerVitesse
+ */
 void avancer(int vitesse, int distance)
 {
-
 	P2OUT &= ~BIT1; 	// sens avant moteur A
 	P2OUT |= BIT5; 		// sens avant moteur B
 	TA1CCR1 = vitesse; 		// gauche
@@ -93,6 +92,9 @@ void avancer(int vitesse, int distance)
 	// TODO
 }
 
+/*
+ * avancerVitesse : avant le robot en passant meme rapport cyclique sur deux roues
+ */
 void avancerVitesse(int vitesse)
 {
 	P2OUT &= ~BIT1; 	// sens avant moteur A
@@ -103,62 +105,68 @@ void avancerVitesse(int vitesse)
 }
 
 /*
- * valeur positive pour tourner a droite
+ * tourner : tourner le robot avec une petite correction
+ * parametres :
+ *      correction : valeur positive pour tourner a droite,
+ *      cette valeur ne doit pas etre tres grande par rapport a TA1CCR1 et TA1CCR2
  */
 void tourner(signed int correction)
 {
-	int roueGauche;
-	if((P2OUT & BIT1) == 0){	// si la roue A est en sens avant
+	volatile int roueGauche;
+	volatile int roueDroite;
+
+	// si la roue A est en sens avant
+	if((P2OUT & BIT1) == 0){
 		roueGauche = TA1CCR1 + correction;
 	}else{
 		roueGauche = TA1CCR1 - correction;
 	}
 
-	int roueDroite;
-	if((P2OUT & BIT5) == BIT5){	// si la roue gauche est en sens avant
+	// si la roue gauche est en sens avant
+	if((P2OUT & BIT5) == BIT5){
 		roueDroite = TA1CCR2 - correction;
 	}else{
 		roueDroite = TA1CCR2 + correction;
 	}
 
+	// si la valeur de calcule est negative, inverse la
 	if(roueGauche < 0){
-		P2OUT |= BIT1;		//inverse sens de moteur A
+		P2OUT |= BIT1;		    //inverse sens de moteur A
 		TA1CCR1 = -roueGauche;
 	}else{
-		P2OUT &= ~BIT1;		//sens avant de moteur A
+		P2OUT &= ~BIT1;		    //sens avant de moteur A
 		TA1CCR1 = roueGauche;
 	}
-
 	if(roueDroite < 0){
-		P2OUT &= ~BIT5;		// inverse sens du moteur B
+		P2OUT &= ~BIT5;		    // inverse sens du moteur B
 		TA1CCR2 = -roueDroite;
 	}else{
-		P2OUT |= BIT5;		//sens avant de moteur B
+		P2OUT |= BIT5;		    //sens avant de moteur B
 		TA1CCR2 = roueDroite;
 	}
-
 }
 
 /*
+ * tournerAngle : tourner le robot en gardant la meme vitesse moyenne
  * angle: 127 -> tourner sur place vers la droite
  * 		 -127 -> tourner sur place vers la gauche
- *
  */
 void tournerAngle(signed int angle)	//tested
 {
-	float vitesseMoy = (TA1CCR1+TA1CCR2)/2;
+	volatile float vitesseMoy = (TA1CCR1+TA1CCR2)/2;
+
 	if(angle >= -127 && angle <= -63 ) {
 		P2OUT |= BIT1;		//inverse sens de moteur A
 		P2OUT |= BIT5; 		// sens avant moteur B
-		float val1 = (vitesseMoy/(127-63));
-		float val2 = val1 * (-angle-63);
 		TA1CCR1 = (int)((vitesseMoy/(127-63)) * (-angle-63));
 		TA1CCR2 = (int)((vitesseMoy/(127-63)) * ((127+63) + angle));
+
 	}else if(angle > -63 && angle < 63 ){
 		P2OUT &= ~BIT1; 	// sens avant moteur A
 		P2OUT |= BIT5; 		// sens avant moteur B
 		TA1CCR1 = (int)((vitesseMoy/(127-63)) * (angle + (127-63)));
 		TA1CCR2 = (int)((vitesseMoy/(127-63)) * ((127-63) - angle));
+
 	}else if(angle >= 63 && angle <= 127 ){
 		P2OUT &= ~BIT1; 	// sens avant moteur A
 		P2OUT &= ~BIT5; 	// inverse sens de moteur B
@@ -167,10 +175,11 @@ void tournerAngle(signed int angle)	//tested
 	}
 }
 
+/*
+ * arreter : arret complet du robot
+ */
 void arreter()
 {
 	TA1CCR1 = 0;
 	TA1CCR2 = 0;
 }
-
-
