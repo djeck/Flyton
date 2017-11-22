@@ -6,9 +6,10 @@
  */
 #include <msp430.h>
 #include "chassis.h"
+#include "utils.h"
 
-unsigned long int cmpt_a = 0;
-unsigned long int cmpt_b = 0;
+volatile unsigned long int cmpt_a = 0;
+volatile unsigned long int cmpt_b = 0;
 
 #pragma vector = PORT2_VECTOR
 __interrupt void PORT2_ISR(void)
@@ -20,6 +21,17 @@ __interrupt void PORT2_ISR(void)
 		cmpt_b++;
 	}
 	P2IFG = 0;
+}
+
+void initPID()//interruption toute 100 ms
+{
+	// 100 ms timer
+	TA0CTL = 0 | (TASSEL_2 | ID_3); // 8 divider
+	//TA0CTL |= MC_1; // up
+	TA0CTL |= MC_0; // stop
+	TA0CTL |= TAIE;
+	TA0CCR0 = 12500;
+	__enable_interrupt();
 }
 
 void initPWM()
@@ -67,6 +79,7 @@ void initChassis()
 {
 	initMoteurs();
 	initOptoCoupleur();
+	initPID();
 }
 
 void avancer(int vitesse, int distance)
@@ -159,3 +172,5 @@ void arreter()
 	TA1CCR1 = 0;
 	TA1CCR2 = 0;
 }
+
+
