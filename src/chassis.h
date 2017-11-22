@@ -11,6 +11,9 @@
 void initChassis();
 void avancer(int vitesse, int distance);
 void avancerVitesse(int vitesse);
-void arreter();
+void arreter();			//tested
+
+void tourner(signed int correction);	//tested
+void tournerAngle(signed int angle);	//tested
 
 #endif /* CHASSIS_H_ */

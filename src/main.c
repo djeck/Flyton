@@ -1,5 +1,6 @@
 #include <msp430.h> 
 #include "utils.h"
+#include "chassis.h"
 
 
 /**
@@ -17,14 +18,23 @@ int main(void)
 
 	initChassis();
 
-
 	while(1){
-		avancerVitesse(50);
-		delay(2000);
+		avancerVitesse(45);
+		delay(1000);
+//		tourner(-15);
 		arreter();
 		delay(1000);
-		P1OUT ^= BIT0;
-		P1OUT ^= BIT4;
+
+//		tournerAngle(-127);
+//		tournerAngle(0);
+//		tournerAngle(-100);
+//		tournerAngle(-45);
+//		tournerAngle(45);
+//		tournerAngle(80);
+//		tournerAngle(-127);
+//		delay(2000);
+//		delay(2000);
+//		tournerAngle(-100);
 	}
 	return 0;
 }

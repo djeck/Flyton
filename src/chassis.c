@@ -71,6 +71,9 @@ void initChassis()
 
 void avancer(int vitesse, int distance)
 {
+
+	P2OUT &= ~BIT1; 	// sens avant moteur A
+	P2OUT |= BIT5; 		// sens avant moteur B
 	TA1CCR1 = vitesse; 		// gauche
 	TA1CCR2 = vitesse; 		// droite
 	TA1CTL |= MC_1;
@@ -79,9 +82,76 @@ void avancer(int vitesse, int distance)
 
 void avancerVitesse(int vitesse)
 {
+	P2OUT &= ~BIT1; 	// sens avant moteur A
+	P2OUT |= BIT5; 		// sens avant moteur B
 	TA1CCR1 = vitesse; 		// gauche
 	TA1CCR2 = vitesse; 		// droite
 	TA1CTL |= MC_1;
+}
+
+/*
+ * valeur positive pour tourner a droite
+ */
+void tourner(signed int correction)
+{
+	int roueGauche;
+	if((P2OUT & BIT1) == 0){	// si la roue A est en sens avant
+		roueGauche = TA1CCR1 + correction;
+	}else{
+		roueGauche = TA1CCR1 - correction;
+	}
+
+	int roueDroite;
+	if((P2OUT & BIT5) == BIT5){	// si la roue gauche est en sens avant
+		roueDroite = TA1CCR2 - correction;
+	}else{
+		roueDroite = TA1CCR2 + correction;
+	}
+
+	if(roueGauche < 0){
+		P2OUT |= BIT1;		//inverse sens de moteur A
+		TA1CCR1 = -roueGauche;
+	}else{
+		P2OUT &= ~BIT1;		//sens avant de moteur A
+		TA1CCR1 = roueGauche;
+	}
+
+	if(roueDroite < 0){
+		P2OUT &= ~BIT5;		// inverse sens du moteur B
+		TA1CCR2 = -roueDroite;
+	}else{
+		P2OUT |= BIT5;		//sens avant de moteur B
+		TA1CCR2 = roueDroite;
+	}
+
+}
+
+/*
+ * angle: 127 -> tourner sur place vers la droite
+ * 		 -127 -> tourner sur place vers la gauche
+ *
+ */
+void tournerAngle(signed int angle)	//tested
+{
+	float vitesseMoy = (TA1CCR1+TA1CCR2)/2;
+	if(angle >= -127 && angle <= -63 ) {
+		P2OUT |= BIT1;		//inverse sens de moteur A
+		P2OUT |= BIT5; 		// sens avant moteur B
+		float val1 = (vitesseMoy/(127-63));
+		float val2 = val1 * (-angle-63);
+		TA1CCR1 = (int)((vitesseMoy/(127-63)) * (-angle-63));
+		TA1CCR2 = (int)((vitesseMoy/(127-63)) * ((127+63) + angle));
+	}else if(angle > -63 && angle < 63 ){
+		P2OUT &= ~BIT1; 	// sens avant moteur A
+		P2OUT |= BIT5; 		// sens avant moteur B
+		TA1CCR1 = (int)((vitesseMoy/(127-63)) * (angle + (127-63)));
+		TA1CCR2 = (int)((vitesseMoy/(127-63)) * ((127-63) - angle));
+	}else if(angle >= 63 && angle <= 127 ){
+		P2OUT &= ~BIT1; 	// sens avant moteur A
+		P2OUT &= ~BIT5; 	// inverse sens de moteur B
+		TA1CCR1 = (int)((vitesseMoy/(127-63)) * ((- angle) + (127+63)));
+		TA1CCR2 = (int)((vitesseMoy/(127-63)) * ((-127+63) + angle));
+	}
 }
 
 void arreter()
