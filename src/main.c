@@ -1,7 +1,9 @@
 #include <msp430.h> 
 #include "utils.h"
 #include "chassis.h"
-
+#include "capteurLuxAir.h"
+#include "capteurInfrarouge.h"
+#include "ADC.h"
 
 /**
  * main.c
@@ -17,13 +19,35 @@ int main(void)
 	DCOCTL = CALDCO_1MHZ; // frequence d'horloge 1MHz
 
 	initChassis();
+	///////////////////////////////////////
+	// initialization capt IR
+	ADC_init();
+	initInfrarouge();
 
-	while(1){
-		avancerVitesse(15);
-		delay(1000);
-//		tourner(-15);
-//		arreter();
-//		delay(1000);
+	//LED indication
+	P1OUT |= BIT0;
+	delay(3000);
+	P1OUT &= ~BIT0;
+	///////////////////////////////////////////
+	// capt lux air
+//	int lumgauche = 0;
+//	int lumdroite = 0;
+//	initLuxAir();
+//	ADC_init();
+//	ADC10AE0 |= (BIT4 | BIT7);
+//	while (1)
+//	{
+//		lumgauche = railGauche();
+//		lumdroite = railDroit();
+//	}
+
+
+
+
+	while (1) // avancer
+	{
+		delay(100);
+		detacteObstacleEtArreter();
 
 
 	}

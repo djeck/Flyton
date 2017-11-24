@@ -121,7 +121,7 @@ void tourner(signed int correction)
 
 void tournerPID(signed int correction)
 {
-	if (statusPID == 1) {
+	if (statusPID() == 1) {
 		// TODO
 	}
 }

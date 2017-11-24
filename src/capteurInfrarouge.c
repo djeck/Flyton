@@ -6,8 +6,11 @@
  */
 
 #include <msp430.h>
+#include "ADC.h"
+#include "capteurInfrarouge.h"
+#include "chassis.h"
 
-int valeurSeuilIR = 100;
+int valeurSeuilIR = 200;
 
 void initInfrarouge(){
     P1SEL &= ~(BIT5);                    //force a 0//0x09
@@ -26,4 +29,18 @@ int obstacle(){
             valeurIR = 0;
         }
     return valeurIR;
+}
+
+void detacteObstacleEtArreter(){
+	volatile int detectionObstacle = 1000;//pour pas qu il s arrete pas au debut
+	detectionObstacle = obstacle();
+	if (detectionObstacle == 1) {
+		P1OUT |= BIT0;
+		arreter();
+		delay(1000);
+	} else {
+		P1OUT &= ~BIT0;
+		avancerVitesse(40);
+		delay(100);
+	}
 }

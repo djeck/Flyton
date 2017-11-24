@@ -7,6 +7,7 @@
 #include <msp430.h>
 #include "PID.h"
 #include "chassis.h"
+#include "utils.h"
 
 
 volatile unsigned long int cmpt_a = 0;
@@ -32,13 +33,13 @@ __interrupt void PORT2_ISR(void)
 __interrupt void PIDAjouster(void)
 {
 	if (enable_pid == 1) {
-		if (cmpt_a > compt_b) {
-			tourner(compt_b-compt_a);
-		} else if (cmp_b < cmpt_a) {
-			tourner(compt_a-compt_b);
+		if (cmpt_a > cmpt_b) {
+			tourner(cmpt_b-cmpt_a);
+		} else if (cmpt_b < cmpt_a) {
+			tourner(cmpt_a-cmpt_b);
 		}
-		TA0CTL &= ~TAIFG;
 	}
+		TA0CTL &= ~TAIFG;
 }
 
 void activerPID(unsigned short int a)

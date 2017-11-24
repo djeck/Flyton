@@ -22,4 +22,6 @@
 void initInfrarouge();
 int obstacle();
 
+void detacteObstacleEtArreter();
+
 #endif /* CAPTEURINFRAROUGE_H_ */

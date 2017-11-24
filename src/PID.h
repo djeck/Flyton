@@ -19,4 +19,6 @@ __interrupt void PIDAjouster(void);
  */
 void initPID();
 
+unsigned short int statusPID();
+
 #endif  //PID_H
