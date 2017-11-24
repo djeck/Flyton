@@ -11,7 +11,7 @@ __interrupt void PORT2_ISR(void);
 
 
 //timer 1 interrupt for PID regulations
-__interrupt void Timer_A1(void);
+__interrupt void PIDAjouster(void);
 
 
 /*

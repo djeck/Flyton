@@ -6,10 +6,13 @@
  */
 #include <msp430.h>
 #include "PID.h"
+#include "chassis.h"
 
 
 volatile unsigned long int cmpt_a = 0;
 volatile unsigned long int cmpt_b = 0;
+
+unsigned short int enable_pid = 0;
 
 #pragma vector = PORT2_VECTOR
 __interrupt void PORT2_ISR(void)
@@ -28,10 +31,24 @@ __interrupt void PORT2_ISR(void)
 #pragma vector = TIMER0_A1_VECTOR
 __interrupt void PIDAjouster(void)
 {
+	if (enable_pid == 1) {
+		if (cmpt_a > compt_b) {
+			tourner(compt_b-compt_a);
+		} else if (cmp_b < cmpt_a) {
+			tourner(compt_a-compt_b);
+		}
+		TA0CTL &= ~TAIFG;
+	}
+}
 
-    P1OUT ^= BIT0;//test for shining the led on P1.0
-    TA0CTL &= ~TAIFG;
+void activerPID(unsigned short int a)
+{
+	enable_pid = a;
+}
 
+unsigned short int statusPID()
+{
+	return enable_pid;
 }
 
 void initOptoCoupleur()

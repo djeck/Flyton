@@ -119,6 +119,13 @@ void tourner(signed int correction)
 	}
 }
 
+void tournerPID(signed int correction)
+{
+	if (statusPID == 1) {
+		// TODO
+	}
+}
+
 /*
  * tournerAngle : tourner le robot en gardant la meme vitesse moyenne
  * angle: 127 -> tourner sur place vers la droite

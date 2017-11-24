@@ -19,22 +19,13 @@ int main(void)
 	initChassis();
 
 	while(1){
-		avancerVitesse(45);
+		avancerVitesse(15);
 		delay(1000);
 //		tourner(-15);
-		arreter();
-		delay(1000);
+//		arreter();
+//		delay(1000);
 
-//		tournerAngle(-127);
-//		tournerAngle(0);
-//		tournerAngle(-100);
-//		tournerAngle(-45);
-//		tournerAngle(45);
-//		tournerAngle(80);
-//		tournerAngle(-127);
-//		delay(2000);
-//		delay(2000);
-//		tournerAngle(-100);
+
 	}
 	return 0;
 }
