@@ -14,5 +14,6 @@ int railGauche();
 
 int railDroit();
 
+void suivreLigneLumineux();
 
 #endif /* CAPTEURLUXAIR_H_ */

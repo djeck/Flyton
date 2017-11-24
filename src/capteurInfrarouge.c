@@ -9,13 +9,15 @@
 #include "ADC.h"
 #include "capteurInfrarouge.h"
 #include "chassis.h"
+#include "utils.h"
 
-int valeurSeuilIR = 200;
+int valeurSeuilIR = 250;
 
 void initInfrarouge(){
     P1SEL &= ~(BIT5);                    //force a 0//0x09
     P1SEL2 &= ~(BIT5);
     P1DIR &= ~(BIT5);                    //P1DIR BIT5 a 0 pour mettre input
+    ADC10AE0 |= BIT5;
 }
 
 int obstacle(){
@@ -35,11 +37,11 @@ void detacteObstacleEtArreter(){
 	volatile int detectionObstacle = 1000;//pour pas qu il s arrete pas au debut
 	detectionObstacle = obstacle();
 	if (detectionObstacle == 1) {
-		P1OUT |= BIT0;
+		P1OUT |= BIT6;
 		arreter();
 		delay(1000);
 	} else {
-		P1OUT &= ~BIT0;
+		P1OUT &= ~BIT6;
 		avancerVitesse(40);
 		delay(100);
 	}

@@ -10,15 +10,15 @@
 
 void initLuxAir()
 {
-    P1SEL &= ~(BIT1 | BIT2 | BIT3 | BIT4);
-    P1SEL2 &= ~(BIT1 | BIT2 | BIT3 | BIT4);
-    P1DIR &= ~(BIT1 | BIT2 | BIT3 | BIT4);
-    P1REN &= ~(BIT1 | BIT2 | BIT3 | BIT4);
+    P1SEL &= ~(BIT4 | BIT7);
+    P1SEL2 &= ~(BIT4 | BIT7);
+    P1DIR &= ~(BIT4 | BIT7);
+    P1REN &= ~(BIT4 | BIT7);
 }
 
 int railGauche()
 {
-	ADC_Demarrer_conversion(1);
+	ADC_Demarrer_conversion(4);
 	int valeurRailGauche = 0;
 	valeurRailGauche = ADC_Lire_resultat ();
 	return valeurRailGauche;
@@ -32,3 +32,15 @@ int railDroit()
 	return valeurRailDroit;
 }
 
+void suivreLigneLumineux(){
+	int gauche = railGauche();
+	int droit = railDroit();
+	volatile int seuilLuxAir = 10;
+	if (gauche-droit > seuilLuxAir){
+		tourner(10);
+	}else if ( (gauche - droit) < - seuilLuxAir){
+		tourner(-10);
+	}else{
+		avancerVitesse(30);
+	}
+}
