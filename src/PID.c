@@ -7,13 +7,47 @@
 #include <msp430.h>
 #include "PID.h"
 
+
+volatile unsigned long int cmpt_a = 0;
+volatile unsigned long int cmpt_b = 0;
+
+#pragma vector = PORT2_VECTOR
+__interrupt void PORT2_ISR(void)
+{
+	if ((P2IN & BIT0) == 0) { // moteur A
+		cmpt_a++;
+		P2IFG &= ~BIT0;		//remettre que le Flag de BIT0 a 0, car on a traite que celui de BIT0
+	}
+	if ((P2IN & BIT3) == 0) { // moteur B
+		cmpt_b++;
+		P2IFG &= ~BIT3;		//remettre que le Flag de BIT3 a 0, car on a traite que celui de BIT3
+	}
+}
+
 //timer 1 interrupt for PID regulations
 #pragma vector = TIMER0_A1_VECTOR
-__interrupt void Timer_A1(void)
+__interrupt void PIDAjouster(void)
 {
+
     P1OUT ^= BIT0;//test for shining the led on P1.0
     TA0CTL &= ~TAIFG;
+
 }
+
+void initOptoCoupleur()
+{
+	initEntree(2,BIT0); // opto-coupleur moteur A
+	P2IE |= BIT0;       //activation du signal d interruption
+	P2IES |= BIT0;
+
+	initEntree(2,BIT3); // opto-coupleur moteur B
+	P2IE |= BIT3;       //activation du signal d interruption
+	P2IES |= BIT3;
+	P2IFG = 0;
+
+	_enable_interrupt();
+}
+
 
 /*
  * initPID : set up a 100 ms timer
@@ -24,6 +58,8 @@ void initPID()
     TA0CTL |= MC_1;
     TA0CTL |= TAIE;
     TA0CCR0 = 12500;
+
+    initOptoCoupleur();
 
     __enable_interrupt();
 }

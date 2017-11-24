@@ -8,7 +8,6 @@
 #ifndef CHASSIS_H_
 #define CHASSIS_H_
 
-__interrupt void PORT2_ISR(void);
 
 /*
  * initChassis : public

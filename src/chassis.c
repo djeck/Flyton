@@ -10,20 +10,6 @@
 #include "PID.h"
 
 
-volatile unsigned long int cmpt_a = 0;
-volatile unsigned long int cmpt_b = 0;
-
-#pragma vector = PORT2_VECTOR
-__interrupt void PORT2_ISR(void)
-{
-	if ((P2IN & BIT0) == BIT0) { // moteur A
-		cmpt_a++;
-	}
-	if ((P2IN & BIT3) == BIT3) { // moteur B
-		cmpt_b++;
-	}
-	P2IFG = 0;
-}
 
 void initPWM()
 {
@@ -53,18 +39,6 @@ void initMoteurs()
 	initPWM();
 }
 
-void initOptoCoupleur()
-{
-	initEntree(2,BIT0); // opto-coupleur moteur A
-	P2IE |= BIT0;       //activation du signal d interruption
-	P2IES |= BIT0;
-
-	initEntree(2,BIT3); // opto-coupleur moteur B
-	P2IE |= BIT3;       //activation du signal d interruption
-	P2IES |= BIT3;
-
-	_enable_interrupt();
-}
 
 /*
  * initChassis : public
@@ -74,7 +48,6 @@ void initOptoCoupleur()
 void initChassis()
 {
 	initMoteurs();
-	initOptoCoupleur();
 	initPID();
 }
 
