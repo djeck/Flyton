@@ -14,6 +14,8 @@ void initLuxAir()
     P1SEL2 &= ~(BIT4 | BIT7);
     P1DIR &= ~(BIT4 | BIT7);
     P1REN &= ~(BIT4 | BIT7);
+	
+	ADC10AE0 |= (BIT4 | BIT7);
 }
 
 int railGauche()
@@ -37,9 +39,9 @@ void suivreLigneLumineux(){
 	int droit = railDroit();
 	volatile int seuilLuxAir = 10;
 	if (gauche-droit > seuilLuxAir){
-		tourner(10);
+		tourner(-20);
 	}else if ( (gauche - droit) < - seuilLuxAir){
-		tourner(-10);
+		tourner(20);
 	}else{
 		avancerVitesse(30);
 	}
