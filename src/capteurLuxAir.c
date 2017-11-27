@@ -33,14 +33,13 @@ int railDroit()
 }
 
 void suivreLigneLumineux(){
-	int gauche = railGauche();
-	int droit = railDroit();
-	volatile int seuilLuxAir = 10;
-	if (gauche-droit > seuilLuxAir){
-		tourner(10);
-	}else if ( (gauche - droit) < - seuilLuxAir){
-		tourner(-10);
+	int diff = railGauche() - railDroit();
+	int seuilLuxAir = 8;
+	if (diff > seuilLuxAir){
+		tournerAngle(-30);
+	}else if (diff < - seuilLuxAir){
+		tournerAngle(30);
 	}else{
-		avancerVitesse(30);
+		avancerVitesse(70);
 	}
 }

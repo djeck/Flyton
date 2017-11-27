@@ -12,8 +12,10 @@ int main(void)
 {
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
 
-	initSortie(1,BIT0); // Launchpad led
-	initSortie(1,BIT4); // test
+	int flagArrivee;
+	initEntree(1,BIT3);
+	initSortie(1,BIT6); // Launchpad led //LED rouge
+	initSortie(1,BIT0);
 
 	BCSCTL1 = CALBC1_1MHZ; // frequence d'horloge 1MHz
 	DCOCTL = CALDCO_1MHZ; // frequence d'horloge 1MHz
@@ -25,30 +27,43 @@ int main(void)
 	initInfrarouge();
 
 	//LED indication
+	P1OUT |= BIT6;
 	P1OUT |= BIT0;
 	delay(3000);
+	P1OUT &= ~BIT6;
 	P1OUT &= ~BIT0;
+
 	///////////////////////////////////////////
-	// capt lux air
-//	int lumgauche = 0;
-//	int lumdroite = 0;
-//	initLuxAir();
-//	ADC_init();
-//	ADC10AE0 |= (BIT4 | BIT7);
-//	while (1)
-//	{
-//		lumgauche = railGauche();
-//		lumdroite = railDroit();
-//	}
 
+	/*
+	 * Chercher la valeur moyenne de capteurs lumineux
+	 */
+	volatile int valMoyLuxAirGauche;
+	volatile int valMoyLuxAirDroite;
 
+	//une fois qu'on appuis sur le bouton, on enregistre les valeurs des capteurs lumineux
 
+	while((P1IN & BIT3) == BIT3){
+		valMoyLuxAirGauche = (railGauche()+railDroit())/2;
+	}//TODO
 
-	while (1) // avancer
+	avancerVitesse(35);
+	delay(2000);
+
+	while (flagArrivee != 1) // avancer
 	{
-		delay(100);
+		delay(75);
 		detacteObstacleEtArreter();
-
+//		zoneBlancheGauche();
+		flagArrivee = detacteZoneBlancheDroiteEtArreter();
+	}
+	avancerVitesse(30);
+	delay(1500);
+	arreter();
+	P1OUT |= BIT6;
+	while (1)	{
+		P1OUT ^= BIT6;
+		delay(400);
 
 	}
 	return 0;

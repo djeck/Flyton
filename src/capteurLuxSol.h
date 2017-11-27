@@ -8,9 +8,12 @@
 #ifndef CAPTEURLUXSOL_H_
 #define CAPTEURLUXSOL_H_
 
+extern int flagArrivee;
+
 void initLuxSol();
 int zoneBlancheGauche();
 int zoneBlancheDroite();
+int detacteZoneBlancheDroiteEtArreter()
 
 
 

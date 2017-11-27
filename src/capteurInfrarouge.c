@@ -11,7 +11,7 @@
 #include "chassis.h"
 #include "utils.h"
 
-int valeurSeuilIR = 250;
+int valeurSeuilIR = 350;
 
 void initInfrarouge(){
     P1SEL &= ~(BIT5);                    //force a 0//0x09
@@ -42,7 +42,7 @@ void detacteObstacleEtArreter(){
 		delay(1000);
 	} else {
 		P1OUT &= ~BIT6;
-		avancerVitesse(40);
-		delay(100);
+		suivreLigneLumineux();
+		delay(50);
 	}
 }
