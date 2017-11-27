@@ -42,6 +42,7 @@ void detacteObstacleEtArreter(){
 		delay(1000);
 	} else {
 		P1OUT &= ~BIT6;
+		avancerVitesse(85);
 		suivreLigneLumineux();
 		delay(50);
 	}

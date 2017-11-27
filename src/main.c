@@ -29,7 +29,7 @@ int main(void)
 	//LED indication
 	P1OUT |= BIT6;
 	P1OUT |= BIT0;
-	delay(3000);
+	delay(2000);
 	P1OUT &= ~BIT6;
 	P1OUT &= ~BIT0;
 
@@ -49,6 +49,8 @@ int main(void)
 
 	avancerVitesse(35);
 	delay(2000);
+	avancerVitesse(85);
+	delay(500);
 
 	while (flagArrivee != 1) // avancer
 	{
@@ -58,9 +60,8 @@ int main(void)
 		flagArrivee = detacteZoneBlancheDroiteEtArreter();
 	}
 	avancerVitesse(30);
-	delay(1500);
+	delay(1000);
 	arreter();
-	P1OUT |= BIT6;
 	while (1)	{
 		P1OUT ^= BIT6;
 		delay(400);
