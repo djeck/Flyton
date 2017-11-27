@@ -16,6 +16,8 @@ void initLuxAir()
     P1SEL2 &= ~(BIT4 | BIT7);
     P1DIR &= ~(BIT4 | BIT7);
     P1REN &= ~(BIT4 | BIT7);
+	
+	ADC10AE0 |= (BIT4 | BIT7);
 }
 
 int railGauche()
@@ -35,6 +37,7 @@ int railDroit()
 }
 
 void suivreLigneLumineux(){
+<<<<<<< HEAD
 	int diff = railGauche() - railDroit();
 	int seuilLuxAir = 4;
 	/*if (diff > seuilLuxAir || diff < seuilLuxAir){
@@ -87,5 +90,16 @@ void suivreLigneLumineux(){
 		P2OUT |= BIT5;		    //sens avant de moteur B
 		TA1CCR1 = 70;
 		TA1CCR2 = 70;
+=======
+	int gauche = railGauche();
+	int droit = railDroit();
+	volatile int seuilLuxAir = 10;
+	if (gauche-droit > seuilLuxAir){
+		tourner(-20);
+	}else if ( (gauche - droit) < - seuilLuxAir){
+		tourner(20);
+	}else{
+		avancerVitesse(30);
+>>>>>>> refs/remotes/origin/master
 	}
 }
