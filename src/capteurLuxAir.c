@@ -7,6 +7,7 @@
 
 #include <msp430.h>
 #include "ADC.h"
+#include "chassis.h"
 
 #define COEF 0.5f
 

@@ -8,6 +8,7 @@
 #include <msp430.h>
 #include "ADC.h"
 #include "capteurInfrarouge.h"
+#include "capteurLuxAir.h"
 #include "chassis.h"
 #include "utils.h"
 

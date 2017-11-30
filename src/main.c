@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "chassis.h"
 #include "capteurLuxAir.h"
+#include "capteurLuxSol.h"
 #include "capteurInfrarouge.h"
 #include "ADC.h"
 
@@ -35,8 +36,7 @@ int main(void)
 	P1OUT &= ~BIT0;
 
 	// Attente du signal de dépard
-	while((P1IN & BIT3) == BIT3){
-	}
+	while((P1IN & BIT3) == BIT3);
 
 	// sort de la zone de départ
 	avancerVitesse(60);
@@ -62,5 +62,4 @@ int main(void)
 		P1OUT ^= BIT6;
 		delay(400);
 	}
-	return 0;
 }
