@@ -8,7 +8,7 @@
 #include <msp430.h>
 #include "ADC.h"
 
-#define COEF 1.0f
+#define COEF 0.5f
 
 void initLuxAir()
 {
@@ -37,69 +37,67 @@ int railDroit()
 }
 
 void suivreLigneLumineux(){
-<<<<<<< HEAD
-	int diff = railGauche() - railDroit();
-	int seuilLuxAir = 4;
+	volatile int diff = railGauche() - railDroit();
+//	int seuilLuxAir = 4;
 	/*if (diff > seuilLuxAir || diff < seuilLuxAir){
 		float corr = ((float)(diff*COEF));
 		tourner((int)(-corr)); // si diff - seuil = 8 => tourne -30
 	}*/
 
-	if (diff > 20) {
-		P2OUT |= BIT1; //inverse sens de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 10;
-		TA1CCR2 = 75;
-	} else if (diff < -20) {
-		P2OUT &= ~BIT5;		    // inverse sens du moteur B
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 75;
-		TA1CCR2 = 10;
-	} else if (diff > 10) {
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 20;
-		TA1CCR2 = 75;
-	} else if (diff < -10) {
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 75;
-		TA1CCR2 = 20;
-	} else if (diff > 7) {
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 50;
-		TA1CCR2 = 75;
-	} else if (diff < -7) {
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 75;
-		TA1CCR2 = 50;
-	} else if (diff > 3) {
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 63;
-		TA1CCR2 = 75;
-	} else if (diff < -3) {
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 75;
-		TA1CCR2 = 63;
-	} else {
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR1 = 70;
-		TA1CCR2 = 70;
-=======
-	int gauche = railGauche();
-	int droit = railDroit();
-	volatile int seuilLuxAir = 10;
-	if (gauche-droit > seuilLuxAir){
-		tourner(-20);
-	}else if ( (gauche - droit) < - seuilLuxAir){
-		tourner(20);
-	}else{
-		avancerVitesse(30);
->>>>>>> refs/remotes/origin/master
-	}
+//	if (diff > 20) {
+//		P2OUT |= BIT1; //inverse sens de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 10;
+//		TA1CCR2 = 75;
+//	} else if (diff < -20) {
+//		P2OUT &= ~BIT5;		    // inverse sens du moteur B
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 75;
+//		TA1CCR2 = 10;
+//	} else if (diff > 10) {
+//		P2OUT &= ~BIT1;		    //sens avant de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 20;
+//		TA1CCR2 = 75;
+//	} else if (diff < -10) {
+//		P2OUT &= ~BIT1;		    //sens avant de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 75;
+//		TA1CCR2 = 20;
+//	} else if (diff > 7) {
+//		P2OUT &= ~BIT1;		    //sens avant de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 50;
+//		TA1CCR2 = 75;
+//	} else if (diff < -7) {
+//		P2OUT &= ~BIT1;		    //sens avant de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 75;
+//		TA1CCR2 = 50;
+//	} else if (diff > 3) {
+//		P2OUT &= ~BIT1;		    //sens avant de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 63;
+//		TA1CCR2 = 75;
+//	} else if (diff < -3) {
+//		P2OUT &= ~BIT1;		    //sens avant de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 75;
+//		TA1CCR2 = 63;
+//	} else {
+//		P2OUT &= ~BIT1;		    //sens avant de moteur A
+//		P2OUT |= BIT5;		    //sens avant de moteur B
+//		TA1CCR1 = 70;
+//		TA1CCR2 = 70;
+//	}
+
+//	int gauche = railGauche();
+//	int droit = railDroit();
+//	int diff = gauche-droit;
+//	const int seuilLuxAirBas = 2;
+//	const int seuilLuxAir = 10;
+	if (TACCR1 + TACCR2 < 100)
+		avancerVitesse(50);
+	tournerAngle(-(int)(diff*COEF));
+
 }

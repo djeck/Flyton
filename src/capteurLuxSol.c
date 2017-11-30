@@ -33,7 +33,7 @@ int zoneBlancheDroite(){
     int valeurZBDroite = 0;
             ADC_Demarrer_conversion(2);
             valeurZBDroite = ADC_Lire_resultat();
-            if (valeurZBDroite<=950){
+            if (valeurZBDroite<=800){
                 valeurZBDroite = 1;
             }
             else{
@@ -43,8 +43,5 @@ int zoneBlancheDroite(){
 }
 
 void detacteZoneBlancheDroiteEtArreter(){
-	if (zoneBlancheDroite()){
-		flagArrivee = 1;
-	}
-	return flagArrivee;
+	flagArrivee = zoneBlancheDroite();
 }

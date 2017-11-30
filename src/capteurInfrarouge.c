@@ -34,16 +34,17 @@ int obstacle(){
 }
 
 void detacteObstacleEtArreter(){
-	volatile int detectionObstacle = 1000;//pour pas qu il s arrete pas au debut
-	detectionObstacle = obstacle();
-	if (detectionObstacle == 1) {
+	int obst = obstacle();
+	while(obst == 1) {
 		P1OUT |= BIT6;
 		arreter();
 		delay(1000);
-	} else {
-		P1OUT &= ~BIT6;
-		avancerVitesse(85);
-		suivreLigneLumineux();
-		delay(50);
+		obst = obstacle();
+		if (obst != 1)
+			avancerVitesse(80);
 	}
+
+	P1OUT &= ~BIT6;
+	suivreLigneLumineux();
+	delay(50);
 }
