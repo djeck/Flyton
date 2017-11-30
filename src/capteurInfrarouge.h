@@ -20,8 +20,16 @@
  *   detectionObstacle = obstacle();
  */
 void initInfrarouge();
+
+/*
+ * @return 1 si un obstable est détecter, 0 sinon
+ */
 int obstacle();
 
+/*
+ * s'arrête si un obstacle est détecter,
+ * repart et suit la ligne lorsque il n'y a plus d'obstacle
+ */
 void detacteObstacleEtArreter();
 
 #endif /* CAPTEURINFRAROUGE_H_ */

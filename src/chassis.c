@@ -42,27 +42,11 @@ void initMoteurs()
 
 /*
  * initChassis : public
- * Initialise les roues moteurs, les opto coupleur,
- * et timer pour regulation PID
+ * Initialise les roues moteurs
  */
 void initChassis()
 {
 	initMoteurs();
-	//initPID();
-}
-
-/*
- * avancer : avancer le robot avec une vitesse a une certaine distance
- * <!!>pour instant pareil que avancerVitesse
- */
-void avancer(int vitesse, int distance)
-{
-	P2OUT &= ~BIT1; 	// sens avant moteur A
-	P2OUT |= BIT5; 		// sens avant moteur B
-	TA1CCR1 = vitesse; 		// gauche
-	TA1CCR2 = vitesse; 		// droite
-	TA1CTL |= MC_1;
-	// TODO
 }
 
 /*
@@ -75,55 +59,6 @@ void avancerVitesse(int vitesse)
 	TA1CCR1 = vitesse; 		// gauche
 	TA1CCR2 = vitesse; 		// droite
 	TA1CTL |= MC_1;
-}
-
-/*
- * tourner : tourner le robot avec une petite correction
- * parametres :
- *      correction : valeur positive pour tourner a droite,
- *      cette valeur ne doit pas etre tres grande par rapport a TA1CCR1 et TA1CCR2
- */
-void tourner(signed int correction)
-{
-	volatile int roueGauche;
-	volatile int roueDroite;
-
-	// si la roue A est en sens avant
-	if((P2OUT & BIT1) == 0){
-		roueGauche = TA1CCR1 + correction;
-	}else{
-		roueGauche = TA1CCR1 - correction;
-	}
-
-	// si la roue gauche est en sens avant
-	if((P2OUT & BIT5) == BIT5){
-		roueDroite = TA1CCR2 - correction;
-	}else{
-		roueDroite = TA1CCR2 + correction;
-	}
-
-	// si la valeur de calcule est negative, inverse la
-	if(roueGauche < 0){
-		P2OUT |= BIT1;		    //inverse sens de moteur A
-		TA1CCR1 = -roueGauche;
-	}else{
-		P2OUT &= ~BIT1;		    //sens avant de moteur A
-		TA1CCR1 = roueGauche;
-	}
-	if(roueDroite < 0){
-		P2OUT &= ~BIT5;		    // inverse sens du moteur B
-		TA1CCR2 = -roueDroite;
-	}else{
-		P2OUT |= BIT5;		    //sens avant de moteur B
-		TA1CCR2 = roueDroite;
-	}
-}
-
-void tournerPID(signed int correction)
-{
-	if (statusPID() == 1) {
-		// TODO
-	}
 }
 
 /*

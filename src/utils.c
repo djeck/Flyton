@@ -7,11 +7,11 @@
  *  Created on: Nov 16, 2017
  *      Author: Wen
  */
-
 void initGPIOPort1(int bit){
     P1SEL &= ~(bit);                        //force a 0
     P1SEL2 &= ~(bit);                       //force a 0
 }
+
 void initGPIOPort2(int bit){
     P2SEL &= ~(bit);                        //force a 0
     P2SEL2 &= ~(bit);                       //force a 0
@@ -57,7 +57,6 @@ void initSortie(int port, int bit){
 //        P2IES |= bit;                       //Detection sur front montant
 //    }// est ce que je mets enable_interrupt?
 //}
-
 void delay(unsigned int ms)
 {
 	volatile unsigned int i=ms, z;

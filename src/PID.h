@@ -19,6 +19,9 @@ __interrupt void PIDAjouster(void);
  */
 void initPID();
 
+/*
+ * @return 1 si le PID est activé, 0 sinon
+ */
 unsigned short int statusPID();
 
 #endif  //PID_H

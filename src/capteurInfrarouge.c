@@ -11,26 +11,26 @@
 #include "chassis.h"
 #include "utils.h"
 
-int valeurSeuilIR = 350;
 
 void initInfrarouge(){
-    P1SEL &= ~(BIT5);                    //force a 0//0x09
+    P1SEL &= ~(BIT5);
     P1SEL2 &= ~(BIT5);
-    P1DIR &= ~(BIT5);                    //P1DIR BIT5 a 0 pour mettre input
+    P1DIR &= ~(BIT5);// pin 1.5 input
     ADC10AE0 |= BIT5;
 }
 
 int obstacle(){
-    int valeurIR = 1000;
+	const int valeurSeuilIR = 350;
+ 	int valeurIR;
         ADC_Demarrer_conversion(5);
         valeurIR = ADC_Lire_resultat();
         if (valeurIR>=valeurSeuilIR){
-            valeurIR = 1;
+		valeurIR = 1;
         }
         else{
-            valeurIR = 0;
+		valeurIR = 0;
         }
-    return valeurIR;
+	return valeurIR;
 }
 
 void detacteObstacleEtArreter(){

@@ -8,13 +8,10 @@
 #ifndef CAPTEURLUXSOL_H_
 #define CAPTEURLUXSOL_H_
 
-extern int flagArrivee;
-
+// initialise le capteur de suivit de ligne
 void initLuxSol();
-int zoneBlancheGauche();
-int zoneBlancheDroite();
-int detacteZoneBlancheDroiteEtArreter()
 
-
+// @return 1 si la zone blanche est détecté
+int zoneBlanche();
 
 #endif /* CAPTEURLUXSOL_H_ */
