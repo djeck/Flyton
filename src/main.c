@@ -51,7 +51,7 @@ int main(void)
 
 	//detacte le rond d'arrivee
 	avancerVitesse(30);
-	delay(1200);
+	delay(1300);
 	arreter();
 	while (1)	{	//clignote la LED
 		P1OUT ^= BIT6;
